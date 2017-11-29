@@ -1,0 +1,26 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.payment.name"></h1>
+  </div>
+  <div class="pull-right"
+       ng-show="vm.payment.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       ui-sref="payments.edit({ paymentId: vm.payment._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="vm.payment.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.payment.user"
+            ng-bind="vm.payment.user.displayName"></span>
+      <span ng-if="!vm.payment.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.payment.content"></p>
+</section>
