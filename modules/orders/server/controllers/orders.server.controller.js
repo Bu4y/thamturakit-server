@@ -566,9 +566,9 @@ function sentNotiToSeller(message, ids) {
     } else if (response.body.error) {
       console.log('Error: ', response.body.error);
     }
-    console.log({
-      message: 'sent noti success'
-    });
+    // console.log({
+    //   message: 'sent noti success'
+    // });
   });
 }
 
@@ -601,8 +601,8 @@ function sentNotiToBuyer(message, ids) {
       });
     });
   } else {
-    console.log({
-      message: 'User ids not found.'
-    });
+    // console.log({
+    //   message: 'User ids not found.'
+    // });
   }
 }
