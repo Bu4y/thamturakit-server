@@ -117,6 +117,8 @@ describe('Order CRUD tests', function () {
           shop.save(function () {
             product.save(function () {
               order = {
+                docno:'13',
+                docdate:'22',
                 shipping: address,
                 items: [
                   {

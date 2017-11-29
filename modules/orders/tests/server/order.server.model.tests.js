@@ -96,6 +96,8 @@ describe('Order Model Unit Tests:', function () {
           shop.save(function () {
             product.save(function () {
               order = new Order({
+                docno:'13',
+                docdate:'22',
                 shipping: address,
                 items: product,
                 amount: 30000,

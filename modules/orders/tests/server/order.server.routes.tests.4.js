@@ -117,6 +117,8 @@ describe('Get Order By user', function () {
           shop.save(function () {
             product.save(function () {
               order = {
+                docno:'13',
+                docdate:'22',
                 shipping: address,
                 items: [
                   {

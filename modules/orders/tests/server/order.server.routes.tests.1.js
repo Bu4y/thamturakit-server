@@ -138,6 +138,8 @@ describe('Order CRUD tests with Token Base Authen', function () {
           shop.save(function () {
             product.save(function () {
               order = {
+                docno:'13',
+                docdate:'22',
                 shipping: address,
                 items: [
                   {
