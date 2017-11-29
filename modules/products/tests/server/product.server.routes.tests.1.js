@@ -95,7 +95,7 @@ describe('Product CRUD tests with Token Base Authen', function () {
               shippings: [{ shippingtype: shipping, shippingprice: 100 }],
               categories: [category],
               cod: false,
-              shop: shop,
+              shop: shop
             };
 
             agent.post('/api/auth/signin')
@@ -147,7 +147,7 @@ describe('Product CRUD tests with Token Base Authen', function () {
             // Set assertions
             //(products[0].user.loginToken).should.equal(token);
             (products.items[0].name).should.match('Product name');
-
+            (products.items[0].version).should.match('2.0');
             // Call the assertion callback
             done();
           });

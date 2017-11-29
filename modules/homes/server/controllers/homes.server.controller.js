@@ -31,7 +31,7 @@ exports.getCate = function (req, res, next) {
 };
 
 exports.getProducts = function (req, res, next) {
-  Product.find({}, '_id name images price promotionprice percentofdiscount currency categories rate historylog shop').sort('-created').populate('categories').populate('shippings').populate('shop').exec(function (err, products) {
+  Product.find({ version: '2.0' }, '_id name images price promotionprice percentofdiscount currency categories rate historylog shop version').sort('-created').populate('categories').populate('shippings').populate('shop').exec(function (err, products) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -115,7 +115,8 @@ exports.cookingHighlight = function (req, res, next) {
       percentofdiscount: product.percentofdiscount,
       currency: product.currency,
       rate: product.rate || 0,
-      detail: product.detail
+      detail: product.detail,
+      version: product.version
     };
     datas.push(data);
   });
@@ -156,7 +157,8 @@ exports.cookingData = function (req, res, next) {
             promotionprice: product.promotionprice,
             percentofdiscount: product.percentofdiscount,
             currency: product.currency,
-            rate: product.rate ? product.rate : 5
+            rate: product.rate ? product.rate : 5,
+            version: product.version
           });
           if (item.popularshops.length > 0) {
 

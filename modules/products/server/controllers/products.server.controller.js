@@ -125,7 +125,7 @@ exports.delete = function (req, res) {
  * Get List Product
  */
 exports.getProductList = function (req, res, next) {
-  Product.find({}, '_id name images price promotionprice percentofdiscount currency categories rate').sort('-created').populate('user', 'displayName').populate('categories').populate('shippings.shippingtype').exec(function (err, products) {
+  Product.find({ version: '2.0' }, '_id name images price promotionprice percentofdiscount currency categories rate version').sort('-created').populate('user', 'displayName').populate('categories').populate('shippings.shippingtype').exec(function (err, products) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -159,7 +159,8 @@ exports.cookingProductList = function (req, res, next) {
       percentofdiscount: element.percentofdiscount,
       currency: element.currency,
       categories: categories,
-      rate: element.rate ? element.rate : 5
+      rate: element.rate ? element.rate : 5,
+      version: element.version
     });
   });
   req.productsCookingList = products;

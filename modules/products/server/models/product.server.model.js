@@ -34,6 +34,10 @@ var ProductSchema = new Schema({
     required: 'Please fill Product name',
     trim: true
   },
+  version:{
+    type:String,
+    default:'2.0'
+  },
   detail: String,
   price: {
     type: Number,

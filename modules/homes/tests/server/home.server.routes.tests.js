@@ -342,6 +342,9 @@ describe('home', function () {
         (home.categories[0].popularshops.length).should.match(1);
         (home.categories[0].popularshops[0].name).should.match(shop.name);
 
+        (home.categories[0].popularproducts[0].version).should.match('2.0');
+        
+
         (home.categories[1].name).should.match(cate.name);
         (home.categories[1].popularproducts.length).should.match(0);
         (home.categories[1].popularshops.length).should.match(0);
