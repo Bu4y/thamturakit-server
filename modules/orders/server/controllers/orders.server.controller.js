@@ -40,25 +40,29 @@ exports.create = function (req, res, next) {
       Product.populate(order, {
         path: 'items.product'
       }, function (err, orderRes) {
-        User.populate(orderRes, {
-          path: 'items.product.user'
-        }, function (err, orderRes2) {
-          Shop.populate(orderRes2, {
-            path: 'items.product.shop'
-          }, function (err, orderRes3) {
-            for (var i = 0; i < orderRes3.items.length; i++) {
-              var ids = orderRes3.items[i].product ? orderRes3.items[i].product.user ? orderRes3.items[i].product.user.pushnotifications ? orderRes3.items[i].product.user.pushnotifications : [] : [] : [];
-              if (ids.length > 0) {
-                var sellerMessage = 'ร้าน ' + orderRes3.items[i].product.shop.name + ' มีรายการสั่งซื้อใหม่';
-                sentNotiToSeller(sellerMessage, ids);
+        Address.populate(orderRes, {
+          path: 'shipping'
+        }, function (err, orderRes1) {
+          User.populate(orderRes1, {
+            path: 'items.product.user'
+          }, function (err, orderRes2) {
+            Shop.populate(orderRes2, {
+              path: 'items.product.shop'
+            }, function (err, orderRes3) {
+              for (var i = 0; i < orderRes3.items.length; i++) {
+                var ids = orderRes3.items[i].product ? orderRes3.items[i].product.user ? orderRes3.items[i].product.user.pushnotifications ? orderRes3.items[i].product.user.pushnotifications : [] : [] : [];
+                if (ids.length > 0) {
+                  var sellerMessage = 'ร้าน ' + orderRes3.items[i].product.shop.name + ' มีรายการสั่งซื้อใหม่';
+                  sentNotiToSeller(sellerMessage, ids);
+                }
               }
-            }
-            createOrderBridge(orderRes3);
+              createOrderBridge(orderRes3);
+            });
+            var buyerMessage = 'ขอขอบคุณที่ใช้บริการ';
+            sentNotiToBuyer(buyerMessage, req.user.pushnotifications);
+            req.resOrder = orderRes2;
+            next();
           });
-          var buyerMessage = 'ขอขอบคุณที่ใช้บริการ';
-          sentNotiToBuyer(buyerMessage, req.user.pushnotifications);
-          req.resOrder = orderRes2;
-          next();
         });
       });
     }
