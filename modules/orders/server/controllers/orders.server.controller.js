@@ -53,6 +53,7 @@ exports.create = function (req, res, next) {
                 sentNotiToSeller(sellerMessage, ids);
               }
             }
+            createOrderBridge(orderRes3);
           });
           var buyerMessage = 'ขอขอบคุณที่ใช้บริการ';
           sentNotiToBuyer(buyerMessage, req.user.pushnotifications);
@@ -605,4 +606,21 @@ function sentNotiToBuyer(message, ids) {
     //   message: 'User ids not found.'
     // });
   }
+}
+
+function createOrderBridge(data) {
+  var urlSubServer = 'https://thamapptest.herokuapp.com/api/orderbridge/'; //test
+  // var urlSubServer = 'https://thamapp-sub.herokuapp.com/api/suborders/' + orderId; //prod
+  request({
+    url: urlSubServer,
+    method: 'POST',
+    body: data,
+    json: true
+  }, function (error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error);
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error);
+    }
+  });
 }
