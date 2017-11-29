@@ -6,6 +6,9 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Shop = mongoose.model('Shop'),
+  Product = mongoose.model('Product'),
+  Category = mongoose.model('Category'),
+  Shipping = mongoose.model('Shipping'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -169,6 +172,48 @@ describe('Shop CRUD token tests', function () {
         if (shopSaveErr) {
           return done(shopSaveErr);
         }
+
+        var category = new Category({
+          name: 'แฟชั่น'
+        });
+        category.save();
+        var shipping = new Shipping({
+          name: 'Shipping Name',
+          detail: 'ส่งด่วน',
+          price: 300,
+          duedate: 2,
+          user: user
+        });
+        shipping.save();
+        var product = new Product({
+          name: 'Product name',
+          detail: 'Product detail',
+          price: 100,
+          promotionprice: 80,
+          percentofdiscount: 20,
+          currency: 'Product currency',
+          images: ['Product images'],
+          shippings: [{ shippingtype: shipping, shippingprice: 100 }],
+          categories: [category],
+          cod: false,
+          shop: shopSaveRes.body
+        });
+
+        var product2 = new Product({
+          name: 'Product name2',
+          detail: 'Product detail2',
+          price: 200,
+          promotionprice: 180,
+          percentofdiscount: 120,
+          currency: 'Product currency2',
+          images: ['Product images2'],
+          shippings: [{ shippingtype: shipping, shippingprice: 1002 }],
+          categories: [category],
+          cod: false,
+          shop: null
+        });
+        product.save();
+        product2.save();
         agent.get('/api/shops/' + shopSaveRes.body._id)
           // .send(shop)
           // .expect(200)
@@ -193,6 +238,10 @@ describe('Shop CRUD token tests', function () {
             // shops.products.should.be.instanceof(Array).and.have.lengthOf(0);
             shops.reviews.should.be.instanceof(Array).and.have.lengthOf(0);
             shops.rate.should.match(5);
+            shops.products.length.should.match(1);
+            shops.products[0].name.should.match(product.name);
+            shops.products[0]._id.should.match(product.id);
+            shops.products[0].image.should.match(product.images[0]);
             done();
           });
       });
@@ -381,7 +430,13 @@ describe('Shop CRUD token tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Shop.remove().exec(done);
+      Shop.remove().exec(function () {
+        Category.remove().exec(function () {
+          Shipping.remove().exec(function () {
+            Product.remove().exec(done);
+          });
+        });
+      });
     });
   });
 });

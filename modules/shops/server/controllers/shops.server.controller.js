@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Shop = mongoose.model('Shop'),
+  Product = mongoose.model('Product'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -30,6 +31,34 @@ exports.create = function (req, res) {
 /**
  * Show the current Shop
  */
+exports.productByShop = function (req, res, next) {
+  Product.find({ shop: req.shop._id }, 'name images _id shop').sort('-created').exec(function (err, products) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var dataProduct = [];
+      if (products && products.length > 0) {
+        products.forEach(function (product) {
+          dataProduct.push({
+            _id: product._id,
+            name: product.name,
+            image: product.images.length > 0 ? product.images[0] : 'no image',
+          });
+        });
+        req.productByShop = dataProduct;
+        next();
+      }else{
+        req.productByShop = dataProduct;
+        next();
+      }
+
+      
+    }
+  });
+};
+
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var shop = req.shop ? req.shop.toJSON() : {};
@@ -42,7 +71,8 @@ exports.read = function (req, res) {
     image: shop.image,
     detail: shop.detail,
     reviews: shop.reviews,
-    rate: shop.rate || 5
+    rate: shop.rate || 5,
+    products: req.productByShop
   };
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.

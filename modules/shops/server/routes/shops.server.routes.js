@@ -16,7 +16,7 @@ module.exports = function (app) {
     .post(shops.create);
 
   app.route('/api/shops/:shopId')//.all(core.requiresLoginToken, shopsPolicy.isAllowed)
-    .get(shops.read);
+    .get(shops.productByShop, shops.read);
 
   app.route('/api/shops/:shopId').all(core.requiresLoginToken, shopsPolicy.isAllowed)
     .put(shops.update)
