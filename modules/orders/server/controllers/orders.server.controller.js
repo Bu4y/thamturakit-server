@@ -508,7 +508,7 @@ exports.orderUserId = function (req, res, next, orderUserId) {
 };
 
 exports.orderByUser = function (req, res) {
-  Order.find({ user: { _id: req.orderUserId } }).sort('-created').populate('user', 'displayName').exec(function (err, orders) {
+  Order.find({ user: { _id: req.orderUserId }, version: '2.0' }).sort('-created').populate('user', 'displayName').exec(function (err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
