@@ -613,8 +613,8 @@ function sentNotiToBuyer(message, ids) {
 }
 
 function createOrderBridge(data) {
-  var urlSubServer = 'https://thamapptest.herokuapp.com/api/orderbridge/'; //test
-  // var urlSubServer = 'https://thamapp-sub.herokuapp.com/api/suborders/' + orderId; //prod
+  // var urlSubServer = 'https://thamapptest.herokuapp.com/api/orderbridge/'; //test
+  var urlSubServer = 'https://thamapp.herokuapp.com/api/orderbridge/'; //prod
   request({
     url: urlSubServer,
     method: 'POST',
