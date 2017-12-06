@@ -117,8 +117,8 @@ describe('create Order Clear Cart', function () {
           shop.save(function () {
             product.save(function () {
               order = {
-                docno:'13',
-                docdate:'22',
+                docno: '13',
+                docdate: '22',
                 shipping: address,
                 items: [
                   {
@@ -229,7 +229,45 @@ describe('create Order Clear Cart', function () {
 
   // 3 sent >> complete
   it('set item status sent to complete', function (done) {
-    var orderObj1 = new Order(order);
+    var orderObj1 = new Order({
+      docno: '13',
+      docdate: '22',
+      shipping: address,
+      items: [
+        {
+          product: product,
+          qty: 1,
+          delivery: {
+            detail: "วันอังคาร, 1 - วัน อังคาร, 2 ส.ค. 2017 ฟรี",
+            name: "ส่งแบบส่งด่วน",
+            price: 0
+          },
+          status: 'waiting',          
+          amount: 20000,
+          discount: 2000,
+          deliveryprice: 0,
+          totalamount: 18000,
+        },
+        {
+          product: product,
+          qty: 1,
+          delivery: {
+            detail: "วันอังคาร, 1 - วัน อังคาร, 2 ส.ค. 2017 ฟรี",
+            name: "ส่งแบบส่งด่วน",
+            price: 0
+          },
+          amount: 20000,
+          status: 'complete',
+          discount: 2000,
+          deliveryprice: 0,
+          totalamount: 18000,
+        }
+      ],
+      amount: 30000,
+      discount: 2000,
+      totalamount: 28000,
+      deliveryprice: 0,
+    });
     orderObj1.save();
     agent.put('/api/updateordercomplete/' + orderObj1.id + '/' + orderObj1.items[0].id)
       .set('authorization', 'Bearer ' + token)
@@ -241,6 +279,64 @@ describe('create Order Clear Cart', function () {
         }
         var ord = orderRes.body;
         (ord.items[0].status).should.match('complete');
+        (ord.status).should.match('complete');
+
+        done();
+      });
+  });
+
+  it('set item status sent to complete unsuccess', function (done) {
+    var orderObj1 = new Order({
+      docno: '13',
+      docdate: '22',
+      shipping: address,
+      items: [
+        {
+          product: product,
+          qty: 1,
+          delivery: {
+            detail: "วันอังคาร, 1 - วัน อังคาร, 2 ส.ค. 2017 ฟรี",
+            name: "ส่งแบบส่งด่วน",
+            price: 0
+          },
+          status: 'waiting',          
+          amount: 20000,
+          discount: 2000,
+          deliveryprice: 0,
+          totalamount: 18000,
+        },
+        {
+          product: product,
+          qty: 1,
+          delivery: {
+            detail: "วันอังคาร, 1 - วัน อังคาร, 2 ส.ค. 2017 ฟรี",
+            name: "ส่งแบบส่งด่วน",
+            price: 0
+          },
+          amount: 20000,
+          status: 'waiting',
+          discount: 2000,
+          deliveryprice: 0,
+          totalamount: 18000,
+        }
+      ],
+      amount: 30000,
+      discount: 2000,
+      totalamount: 28000,
+      deliveryprice: 0,
+    });
+    orderObj1.save();
+    agent.put('/api/updateordercomplete/' + orderObj1.id + '/' + orderObj1.items[0].id)
+      .set('authorization', 'Bearer ' + token)
+      .expect(200)
+      .end(function (orderErr, orderRes) {
+        // Handle signin error
+        if (orderErr) {
+          return done(orderErr);
+        }
+        var ord = orderRes.body;
+        (ord.items[0].status).should.match('complete');
+        (ord.status).should.match('confirm');
 
         done();
       });

@@ -459,12 +459,25 @@ exports.acceptToSent = function (req, res) {
 
 exports.sentToComplete = function (req, res) {
   var productname = '';
+  var lengthItems = req.order.items.length;
+  // lengthItems = 2;
+  var count = 0;
   req.order.items.forEach(function (itm) {
     if (itm._id.toString() === req.itemID.toString()) {
       itm.status = 'complete';
       productname = itm.product.name;
     }
   });
+
+  req.order.items.forEach(function (itm) {
+    if (itm.status.toString() === 'complete') {
+      count += 1;
+    }
+  });
+
+  if (lengthItems === count) {
+    req.order.status = 'complete';
+  }
   req.order.save(function (err) {
     if (err) {
       return res.status(400).send({
