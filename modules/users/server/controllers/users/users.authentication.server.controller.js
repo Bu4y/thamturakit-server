@@ -276,7 +276,18 @@ exports.checkuserByTel = function (req, res) {
     if (users && users.length > 0) {
       res.jsonp(true);
     } else {
-      res.jsonp(false);
+      User.find({ address: req.body }).exec(function (err, usersres) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+        if (usersres && usersres.length > 0) {
+          res.jsonp(true);
+        } else {
+          res.jsonp(false);
+        }
+      });
     }
   });
 };
