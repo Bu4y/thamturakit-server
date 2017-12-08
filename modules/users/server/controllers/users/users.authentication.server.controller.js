@@ -274,17 +274,15 @@ exports.checkuserByTel = function (req, res) {
     }
     // res.jsonp(users[0]);
     if (users && users.length > 0) {
-      console.log('users ' + users);
       res.jsonp(true);
     } else {
-      User.find({ address: req.body }).exec(function (err, usersres) {
+      User.find({ username: req.body.tel }).exec(function (err, usersres) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
         }
         if (usersres && usersres.length > 0) {
-          console.log('usersres ' + usersres);
           res.jsonp(true);
         } else {
           res.jsonp(false);
